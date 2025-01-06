@@ -6,6 +6,18 @@ A simple and powerful transtion plugin
 - 👍 easy to use
 - 🪶 lightweight
 - 🛠️ many transitions:
+	- fade
+	- wipe
+	- circle
+	- diamond
+	- pixel
+	- linies
+	- bar
+	- radial
+	- scribbles
+	- paint brush
+	- sweeping diamond
+
 
 ## 🚀 Usage
 like this:
@@ -25,6 +37,7 @@ func start_battle():
 	
 	get_tree().paused = false
 ```
+
 
 ## ⬇️ Installation
 If you don't have a "addons" folder in your project tree:
