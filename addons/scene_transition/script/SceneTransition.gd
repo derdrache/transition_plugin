@@ -15,6 +15,8 @@ const HORIZ_PAINT_BRUSH = preload("res://addons/scene_transition/shaders/images/
 
 enum Directions {RIGHT, UP, LEFT, DOWN}
 
+var backgroundColor := Color(0,0,0)
+
 func fade_in(duration := 0.5):
 	var transitionScene = _add_transition_scene()
 	
@@ -299,9 +301,14 @@ func random_out(duration := 1.0):
 	
 	await transitionList.pick_random().call(duration)
 
+func change_color(newColor: Color):
+	backgroundColor = newColor
+
 func _add_transition_scene():
 	var scene = SCENE.instantiate()
 	get_tree().root.add_child(scene)
+	
+	scene.color_rect.color = backgroundColor
 	
 	return scene
 
