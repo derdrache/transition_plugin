@@ -1,19 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://byi0dhjiiwfof"]
+[gd_scene load_steps=2 format=3 uid="uid://byi0dhjiiwfof"]
 
 [ext_resource type="Script" path="res://addons/scene_transition/scene/scene.gd" id="1_837m7"]
-[ext_resource type="Shader" path="res://addons/scene_transition/shaders/sweeping_diamond.gdshader" id="2_iqbp2"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0exof"]
-shader = ExtResource("2_iqbp2")
-shader_parameter/progress = 1.0
-shader_parameter/diamondPixelSize = 50.0
 
 [node name="Scene" type="CanvasLayer"]
 layer = 128
 script = ExtResource("1_837m7")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_0exof")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
