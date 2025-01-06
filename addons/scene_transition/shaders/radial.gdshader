@@ -11,7 +11,7 @@ bool in_cooldown(vec2 uv, float progress) {
     vec2 centered_uv = uv - vec2(0.5);
 
     // Calculate the angle of the UV coordinate
-    float angle = atan(centered_uv.y, centered_uv.x) / (2.0 * 3.14159265359) + 0.5;
+    float angle = -atan(centered_uv.y, centered_uv.x) / (2.0 * 3.14159265359) + 0.5;
 
     // Check if the point is within the cooldown arc
     return (angle <= progress);
@@ -22,7 +22,7 @@ void fragment() {
     vec4 tex_color = texture(TEXTURE, UV);
 
     // Check if the current fragment is within the cooldown arc
-    if (in_cooldown(UV, cooldown_progress)) {
+    if (in_cooldown(UV, 1.0- cooldown_progress)) {
         // If within the cooldown, set the color to the texture color
         COLOR.a = 0.0;
     } 
