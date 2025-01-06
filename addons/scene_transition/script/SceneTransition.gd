@@ -14,26 +14,15 @@ const SCRIBBLES_IMAGE = preload("res://addons/scene_transition/shaders/images/sc
 const HORIZ_PAINT_BRUSH = preload("res://addons/scene_transition/shaders/images/horiz_paint_brush.png")
 
 enum Directions {RIGHT, UP, LEFT, DOWN}
+enum Transition_Type {IN, OUT}
 
 var backgroundColor := Color(0,0,0)
 
 func fade_in(duration := 0.5):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.modulate.a = 0
-	
-	await _do_tween(transitionScene, "modulate:a", 1, duration)
-	
-	transitionScene.queue_free()
+	await _transition_fade(Transition_Type.IN, duration)
 	
 func fade_out(duration := 0.5):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.modulate.a = 1
-	
-	await _do_tween(transitionScene, "modulate:a", 0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_fade(Transition_Type.OUT, duration)
 
 func wipe_in(duration := 0.5, direction: Directions = Directions.RIGHT):
 	var transitionScene = _add_transition_scene()
@@ -58,236 +47,62 @@ func wipe_out(duration := 0.5, direction: Directions = Directions.RIGHT):
 	transitionScene.queue_free()
 	
 func circle_in(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = CIRCLE_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("circle_size", 1.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/circle_size", 0.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_circle(Transition_Type.IN, duration)
 	
 func circle_out(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = CIRCLE_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("circle_size", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/circle_size", 1.0, duration)
-
-	transitionScene.queue_free()
+	await _transition_circle(Transition_Type.OUT, duration)
 
 func diamond_in(duration := 1.0, diamondSize := 25.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = DIAMOND_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("diamondPixelSize", diamondSize)
-	transitionScene.color_rect.material.set_shader_parameter("progress", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/progress", 1.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_diamond(Transition_Type.IN, duration, diamondSize)
 	
 func diamond_out(duration := 1.0, diamondSize := 25.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = DIAMOND_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("diamondPixelSize", diamondSize)
-	transitionScene.color_rect.material.set_shader_parameter("progress", 1.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/progress", 0.0, duration)
-
-	transitionScene.queue_free()
+	await _transition_diamond(Transition_Type.IN, duration, diamondSize)
 
 func pixel_in(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = PIXEL_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("time", 1.6)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/time", 0.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_pixel(Transition_Type.IN, duration)
 	
 func pixel_out(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = PIXEL_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("time", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/time", 1.6, duration)
-	
-	transitionScene.queue_free()
+	await _transition_pixel(Transition_Type.OUT, duration)
 
-func linie_in(duration := 1.0, on_y_axis := true):
-	var transitionScene = _add_transition_scene()
+func linies_in(duration := 1.0, on_y_axis := true):
+	await _transition_lines(Transition_Type.IN, duration, on_y_axis)
 	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = LINIE_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("on_y_axis", on_y_axis)
-	transitionScene.color_rect.material.set_shader_parameter("threshold", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/threshold", 1.0, duration)
-	
-	transitionScene.queue_free()
-	
-func linie_out(duration := 1.0, on_y_axis := true):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = LINIE_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("on_y_axis", on_y_axis)
-	transitionScene.color_rect.material.set_shader_parameter("threshold", 1.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/threshold", 0.0, duration)
-	
-	transitionScene.queue_free()
+func linies_out(duration := 1.0, on_y_axis := true):
+	await _transition_lines(Transition_Type.OUT, duration, on_y_axis)
 
 func bar_in(duration := 1.0, on_y_axis := true):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = BAR_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("on_y_axis", on_y_axis)
-	transitionScene.color_rect.material.set_shader_parameter("threshold", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/threshold", 1.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_bar(Transition_Type.IN, duration, on_y_axis)
 	
 func bar_out(duration := 1.0, on_y_axis := true):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = BAR_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("on_y_axis", on_y_axis)
-	transitionScene.color_rect.material.set_shader_parameter("threshold", 1.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/threshold", 0.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_bar(Transition_Type.OUT, duration, on_y_axis)
 
 func radial_in(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = RADIAL_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("cooldown_progress", 1.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/cooldown_progress", 0.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_radial(Transition_Type.IN, duration)
 	
 func radial_out(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = RADIAL_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("cooldown_progress", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/cooldown_progress", 1.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_radial(Transition_Type.OUT, duration)
 
 func scribbles_in(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = DISOLVE_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("dissolve_texture", SCRIBBLES_IMAGE)
-	transitionScene.color_rect.material.set_shader_parameter("amount", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/amount", 1.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_scribbles(Transition_Type.IN, duration)
 
 func scribbles_out(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = DISOLVE_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("dissolve_texture", SCRIBBLES_IMAGE)
-	transitionScene.color_rect.material.set_shader_parameter("amount", 1.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/amount", 0.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_scribbles(Transition_Type.OUT, duration)
 
 func paint_brush_in(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = DISOLVE_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("dissolve_texture", HORIZ_PAINT_BRUSH)
-	transitionScene.color_rect.material.set_shader_parameter("amount", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/amount", 1.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_paint_brush(Transition_Type.IN, duration)
 
 func paint_brush_out(duration := 1.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = DISOLVE_SHADER
-	
-	transitionScene.color_rect.material.set_shader_parameter("dissolve_texture", HORIZ_PAINT_BRUSH)
-	transitionScene.color_rect.material.set_shader_parameter("amount", 1.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/amount", 0.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_paint_brush(Transition_Type.OUT, duration)
 
 func sweeping_diamond_in(duration := 1.0, diamondSize := 35.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = SWEEPING_DIAMOND
-	
-	transitionScene.color_rect.material.set_shader_parameter("diamondPixelSize", diamondSize)
-	transitionScene.color_rect.material.set_shader_parameter("progress", 0.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/progress", 1.0, duration)
-	
-	transitionScene.queue_free()
+	await _transition_sweeping_diamond(Transition_Type.IN, duration, diamondSize)
 	
 func sweeping_diamond_out(duration := 1.0, diamondSize := 35.0):
-	var transitionScene = _add_transition_scene()
-	
-	transitionScene.color_rect.material = ShaderMaterial.new()
-	transitionScene.color_rect.material.shader = SWEEPING_DIAMOND
-	
-	transitionScene.color_rect.material.set_shader_parameter("diamondPixelSize", diamondSize)
-	transitionScene.color_rect.material.set_shader_parameter("progress", 1.0)
-	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/progress", 0.0, duration)
-
-	transitionScene.queue_free()
+	await _transition_sweeping_diamond(Transition_Type.OUT, duration, diamondSize)
 
 func random_in(duration := 1.0):
 	var transitionList = [
-		fade_in, wipe_in, circle_in, diamond_in, pixel_in, linie_in, bar_in, 
+		fade_in, wipe_in, circle_in, diamond_in, pixel_in, linies_in, bar_in, 
 		radial_in, scribbles_in, paint_brush_in, sweeping_diamond_in
 	]
 	
@@ -295,7 +110,7 @@ func random_in(duration := 1.0):
 
 func random_out(duration := 1.0):
 	var transitionList = [
-		fade_out, wipe_out, circle_out, diamond_out, pixel_out, linie_out, bar_out, 
+		fade_out, wipe_out, circle_out, diamond_out, pixel_out, linies_out, bar_out, 
 		radial_out, scribbles_out, paint_brush_out, sweeping_diamond_out
 	]
 	
@@ -303,6 +118,151 @@ func random_out(duration := 1.0):
 
 func change_color(newColor: Color):
 	backgroundColor = newColor
+
+
+func _transition_fade(transitionType: Transition_Type, duration: float):
+	var transitionScene = _add_transition_scene()
+	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	
+	transitionScene.color_rect.modulate.a = startValue
+	
+	await _do_tween(transitionScene, "modulate:a", endValue, duration)
+	
+	transitionScene.queue_free()
+
+func _transition_circle(transitionType: Transition_Type, duration: float):
+	var transitionScene = _add_transition_scene()
+	var startValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	var endValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = CIRCLE_SHADER
+	
+	transitionScene.color_rect.material.set_shader_parameter("circle_size", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/circle_size", endValue, duration)
+	
+	transitionScene.queue_free()
+
+func _transition_diamond(transitionType: Transition_Type, duration: float,  diamondSize: float):
+	var transitionScene = _add_transition_scene()
+	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = DIAMOND_SHADER
+	
+	transitionScene.color_rect.material.set_shader_parameter("diamondPixelSize", diamondSize)
+	transitionScene.color_rect.material.set_shader_parameter("progress", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/progress", endValue, duration)
+	
+	transitionScene.queue_free()
+
+func _transition_pixel(transitionType: Transition_Type, duration: float):
+	var transitionScene = _add_transition_scene()
+	var startValue = 1.6 if transitionType == Transition_Type.IN else 0.0
+	var endValue = 0.0 if transitionType == Transition_Type.IN else 1.6
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = PIXEL_SHADER
+	
+	transitionScene.color_rect.material.set_shader_parameter("time", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/time", endValue, duration)
+	
+	transitionScene.queue_free()
+
+func _transition_lines(transitionType: Transition_Type, duration: float, on_y_axis: bool):
+	var transitionScene = _add_transition_scene()
+	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = LINIE_SHADER
+	
+	transitionScene.color_rect.material.set_shader_parameter("on_y_axis", on_y_axis)
+	transitionScene.color_rect.material.set_shader_parameter("threshold", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/threshold", endValue, duration)
+	
+	transitionScene.queue_free()
+
+func _transition_bar(transitionType: Transition_Type, duration: float, on_y_axis: bool):
+	var transitionScene = _add_transition_scene()
+	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = BAR_SHADER
+	
+	transitionScene.color_rect.material.set_shader_parameter("on_y_axis", on_y_axis)
+	transitionScene.color_rect.material.set_shader_parameter("threshold", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/threshold", endValue, duration)
+	
+	transitionScene.queue_free()
+
+func _transition_radial(transitionType: Transition_Type, duration: float):
+	var transitionScene = _add_transition_scene()
+	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = RADIAL_SHADER
+	
+	transitionScene.color_rect.material.set_shader_parameter("cooldown_progress", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/cooldown_progress", endValue, duration)
+	
+	transitionScene.queue_free()
+
+func _transition_scribbles(transitionType: Transition_Type, duration: float):
+	var transitionScene = _add_transition_scene()
+	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = DISOLVE_SHADER
+	
+	transitionScene.color_rect.material.set_shader_parameter("dissolve_texture", SCRIBBLES_IMAGE)
+	transitionScene.color_rect.material.set_shader_parameter("amount", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/amount", endValue, duration)
+	
+	transitionScene.queue_free()
+	
+func _transition_paint_brush(transitionType: Transition_Type, duration: float,):
+	var transitionScene = _add_transition_scene()
+	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = DISOLVE_SHADER
+	
+	transitionScene.color_rect.material.set_shader_parameter("dissolve_texture", HORIZ_PAINT_BRUSH)
+	transitionScene.color_rect.material.set_shader_parameter("amount", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/amount", endValue, duration)
+	
+	transitionScene.queue_free()
+
+func _transition_sweeping_diamond(transitionType: Transition_Type, duration: float,  diamondSize: float):
+	var transitionScene = _add_transition_scene()
+	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
+	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
+	
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = SWEEPING_DIAMOND
+	
+	transitionScene.color_rect.material.set_shader_parameter("diamondPixelSize", diamondSize)
+	transitionScene.color_rect.material.set_shader_parameter("progress", 1.0)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/progress", 0.0, duration)
+
+	transitionScene.queue_free()
 
 func _add_transition_scene():
 	var scene = SCENE.instantiate()
