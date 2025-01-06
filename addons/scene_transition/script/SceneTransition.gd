@@ -58,7 +58,7 @@ func diamond_in(duration := 1.0, diamondSize := 25.0):
 	await _transition_diamond(Transition_Type.IN, duration, diamondSize)
 	
 func diamond_out(duration := 1.0, diamondSize := 25.0):
-	await _transition_diamond(Transition_Type.IN, duration, diamondSize)
+	await _transition_diamond(Transition_Type.OUT, duration, diamondSize)
 
 func pixel_in(duration := 1.0):
 	await _transition_pixel(Transition_Type.IN, duration)
@@ -270,9 +270,9 @@ func _transition_sweeping_diamond(transitionType: Transition_Type, duration: flo
 	transitionScene.color_rect.material.shader = SWEEPING_DIAMOND
 	
 	transitionScene.color_rect.material.set_shader_parameter("diamondPixelSize", diamondSize)
-	transitionScene.color_rect.material.set_shader_parameter("progress", 1.0)
+	transitionScene.color_rect.material.set_shader_parameter("progress", startValue)
 	
-	await _do_tween(transitionScene.color_rect, "material:shader_parameter/progress", 0.0, duration)
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/progress", endValue, duration)
 
 	transitionScene.queue_free()
 
