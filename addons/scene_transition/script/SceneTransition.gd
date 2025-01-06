@@ -106,13 +106,20 @@ func random_in(duration := 1.0):
 		radial_in, scribbles_in, paint_brush_in, sweeping_diamond_in
 	]
 	
-	await transitionList.pick_random().call(duration)
+	var selectedTransition = transitionList.pick_random()
+	await selectedTransition.call(duration)
+	
+	return transitionList.find(selectedTransition)
 
-func random_out(duration := 1.0):
+func random_out(duration := 1.0, selectedRandomTransition := -1):
 	var transitionList = [
 		fade_out, wipe_out, circle_out, diamond_out, pixel_out, linies_out, bar_out, 
 		radial_out, scribbles_out, paint_brush_out, sweeping_diamond_out
 	]
+	
+	if selectedRandomTransition != -1:
+		await transitionList[selectedRandomTransition].call(duration)
+		return 
 	
 	await transitionList.pick_random().call(duration)
 
