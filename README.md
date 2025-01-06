@@ -49,8 +49,6 @@ elif you have a "addons" folder already:
 
 	copy the "scene_transition" folder in your "addons" folder
 
-At the end it should look like this:
-
 
 ## 📜 Credits
 - Scribbles images by jabsatz https://github.com/glass-brick/Scene-Manager
