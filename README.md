@@ -1,4 +1,4 @@
-# Godot Scene Transition Plugin
+# Godot Transition Plugin
  
 A simple and powerful transtion plugin
 
@@ -17,6 +17,7 @@ A simple and powerful transtion plugin
 	- scribbles
 	- paint brush
 	- sweeping diamond
+   	- random
 
 
 ## 🚀 Usage
