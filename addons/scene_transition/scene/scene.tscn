@@ -1,12 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://byi0dhjiiwfof"]
+[gd_scene load_steps=3 format=3 uid="uid://byi0dhjiiwfof"]
 
 [ext_resource type="Script" path="res://addons/scene_transition/scene/scene.gd" id="1_837m7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k4jmk"]
 
 [node name="Scene" type="CanvasLayer"]
 layer = 128
 script = ExtResource("1_837m7")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_k4jmk")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

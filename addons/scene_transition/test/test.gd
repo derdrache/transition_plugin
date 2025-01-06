@@ -6,7 +6,7 @@ func _ready() -> void:
 	
 	get_tree().paused = true
 	
-	await SceneTransition.sweeping_diamond_in(1.0)
-	await SceneTransition.sweeping_diamond_out(1.0)
+	await SceneTransition.random_in(1.0)
+	await SceneTransition.random_out(1.0)
 	
 	get_tree().paused = false
