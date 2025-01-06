@@ -1,6 +1,8 @@
 extends Node
 
 const SCENE = preload("res://addons/scene_transition/scene/scene.tscn")
+
+const FADE_SHADER = preload("res://addons/scene_transition/shaders/fade.gdshader")
 const CIRCLE_SHADER = preload("res://addons/scene_transition/shaders/circle.gdshader")
 const DIAMOND_SHADER = preload("res://addons/scene_transition/shaders/diamond.gdshader")
 const PIXEL_SHADER = preload("res://addons/scene_transition/shaders/pixel.gdshader")
@@ -132,9 +134,12 @@ func _transition_fade(transitionType: Transition_Type, duration: float):
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
-	transitionScene.color_rect.modulate.a = startValue
+	transitionScene.color_rect.material = ShaderMaterial.new()
+	transitionScene.color_rect.material.shader = FADE_SHADER
 	
-	await _do_tween(transitionScene, "modulate:a", endValue, duration)
+	transitionScene.color_rect.material.set_shader_parameter("amount", startValue)
+	
+	await _do_tween(transitionScene.color_rect, "material:shader_parameter/amount", endValue, duration)
 	
 	transitionScene.queue_free()
 
