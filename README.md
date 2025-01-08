@@ -21,12 +21,11 @@ A simple and powerful transtion plugin
 
 
 ## 🚀 Usage
-like this:
 ```
 SceneTransition.diamond_in()
 ```
 
-or in a full context:
+full context:
 
  ```
 func start_battle():
