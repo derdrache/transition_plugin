@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cyt047e46v7j7"]
 
-[ext_resource type="Script" path="res://addons/scene_transition/test/test.gd" id="1_bsmad"]
+[ext_resource type="Script" uid="uid://sg1vf0gr0db8" path="res://addons/scene_transition/test/test.gd" id="1_bsmad"]
 
 [node name="Test" type="Control"]
 process_mode = 3

@@ -25,5 +25,5 @@ void fragment() {
     if (in_cooldown(UV, 1.0- cooldown_progress)) {
         // If within the cooldown, set the color to the texture color
         COLOR.a = 0.0;
-    } 
+    }
 }
