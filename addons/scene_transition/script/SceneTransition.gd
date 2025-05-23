@@ -1,5 +1,7 @@
 extends Node
 
+signal finished()
+
 const SCENE = preload("res://addons/scene_transition/scene/scene.tscn")
 
 const FADE_SHADER = preload("res://addons/scene_transition/shaders/fade.gdshader")
@@ -19,6 +21,7 @@ enum Directions {RIGHT, UP, LEFT, DOWN}
 enum Transition_Type {IN, OUT}
 
 var backgroundColor := Color(0,0,0)
+var transitionScene
 
 func fade_in(duration := 0.5):
 	await _transition_fade(Transition_Type.IN, duration)
@@ -27,7 +30,7 @@ func fade_out(duration := 0.5):
 	await _transition_fade(Transition_Type.OUT, duration)
 
 func wipe_in(duration := 0.5, direction: Directions = Directions.RIGHT):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var screenSize = Vector2(get_viewport().size)
 	var startPosition = _transform_direction(direction) * screenSize
 	
@@ -38,7 +41,7 @@ func wipe_in(duration := 0.5, direction: Directions = Directions.RIGHT):
 	transitionScene.queue_free()
 	
 func wipe_out(duration := 0.5, direction: Directions = Directions.RIGHT):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var screenSize = Vector2(get_viewport().size)
 	var targetPosition = _transform_direction(direction) * screenSize
 	
@@ -109,6 +112,7 @@ func random_in(duration := 1.0):
 	]
 	
 	var selectedTransition = transitionList.pick_random()
+	
 	await selectedTransition.call(duration)
 	
 	return transitionList.find(selectedTransition)
@@ -130,7 +134,7 @@ func change_color(newColor: Color):
 
 
 func _transition_fade(transitionType: Transition_Type, duration: float):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
@@ -144,7 +148,7 @@ func _transition_fade(transitionType: Transition_Type, duration: float):
 	transitionScene.queue_free()
 
 func _transition_circle(transitionType: Transition_Type, duration: float):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	var endValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	
@@ -158,7 +162,7 @@ func _transition_circle(transitionType: Transition_Type, duration: float):
 	transitionScene.queue_free()
 
 func _transition_diamond(transitionType: Transition_Type, duration: float,  diamondSize: float):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
@@ -173,7 +177,7 @@ func _transition_diamond(transitionType: Transition_Type, duration: float,  diam
 	transitionScene.queue_free()
 
 func _transition_pixel(transitionType: Transition_Type, duration: float):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 1.6 if transitionType == Transition_Type.IN else 0.0
 	var endValue = 0.0 if transitionType == Transition_Type.IN else 1.6
 	
@@ -187,7 +191,7 @@ func _transition_pixel(transitionType: Transition_Type, duration: float):
 	transitionScene.queue_free()
 
 func _transition_lines(transitionType: Transition_Type, duration: float, on_y_axis: bool):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
@@ -202,7 +206,7 @@ func _transition_lines(transitionType: Transition_Type, duration: float, on_y_ax
 	transitionScene.queue_free()
 
 func _transition_bar(transitionType: Transition_Type, duration: float, on_y_axis: bool):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
@@ -217,7 +221,7 @@ func _transition_bar(transitionType: Transition_Type, duration: float, on_y_axis
 	transitionScene.queue_free()
 
 func _transition_radial(transitionType: Transition_Type, duration: float):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
@@ -231,7 +235,7 @@ func _transition_radial(transitionType: Transition_Type, duration: float):
 	transitionScene.queue_free()
 
 func _transition_scribbles(transitionType: Transition_Type, duration: float):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
@@ -246,7 +250,7 @@ func _transition_scribbles(transitionType: Transition_Type, duration: float):
 	transitionScene.queue_free()
 	
 func _transition_paint_brush(transitionType: Transition_Type, duration: float,):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
@@ -262,7 +266,7 @@ func _transition_paint_brush(transitionType: Transition_Type, duration: float,):
 	transitionScene.queue_free()
 
 func _transition_sweeping_diamond(transitionType: Transition_Type, duration: float,  diamondSize: float):
-	var transitionScene = _add_transition_scene()
+	transitionScene = _add_transition_scene()
 	var startValue = 0.0 if transitionType == Transition_Type.IN else 1.0
 	var endValue = 1.0 if transitionType == Transition_Type.IN else 0.0
 	
@@ -296,3 +300,8 @@ func _do_tween(object: Object, property: NodePath, final_val: Variant, duration:
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property(object, property, final_val, duration)
 	await tween.finished
+	
+	finished.emit()
+
+func has_active_transtion():
+	return transitionScene != null
